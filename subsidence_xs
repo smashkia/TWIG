@@ -1,0 +1,52 @@
+#with open('SV_steady_june2008.sdf') as file:
+#	lines = file.read().split('BEGIN CROSS-SECTIONS')
+#	cut = lines[1].split('END CROSS-SECTIONS')
+#	table = cut[0].split('CROSS-SECTION:')
+#	print len(table)
+#test = table[1]
+#data = test.split('SURFACE LINE:')
+#test = data[1].split('END')
+#newtest = test[0].split('\n')
+
+#quantify subsidence rates in different areas
+years = 50.0
+mm_to_feet = 0.00328084
+RM 27 to 0: 15 mm/year
+RM 78 to 27: 6 mm/year
+RM 135 to 78: 3 mm/year
+RM 230 to 135: 2 mm/year
+RM 306 to 230: 0 mm/year
+
+
+#separate cross-sections into big list
+with open('SV_steady_june2008.sdf') as file:
+	sections = file.read().split('CROSS-SECTION:')
+	#only need sections[4] to sections[1053]
+	for i in range(len(sections)):
+		#identify river station to determine appropriate subrate
+		station = sections[i].split('\n')[3] 
+		v = float(station[12:])
+		if 0 <= v <= 27:
+			m = 15
+		if 27 <= v <= 78:
+			m = 6
+		if 78 <= v <= 135:
+			m = 3
+		if 135 <= v <= 230:
+			m = 2
+		if 230 <= v <= 306:
+			m = 0
+		data = sections[i].split('SURFACE LINE:')
+		test = data[1].split('END')
+		newtest = test[0].split('\n')
+			#adjusts z-values across cross section for subsided level
+		subrate = m*mm_to_feet*years
+		for i in newtest[1:-1]:
+			n = i.split(',')
+			b = str(float(n[2] + subrate)
+			n[2] = b
+		#insert subsided cross section data back into lists
+		
+	#rewrite file and save
+
+	
